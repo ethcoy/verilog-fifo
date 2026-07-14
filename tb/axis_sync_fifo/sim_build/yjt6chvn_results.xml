@@ -1,0 +1,8 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="0" />
+    <testcase name="axis_sync_fifo" classname="axis_sync_fifo_tb" file="/home/ecoyle/repos/verilog-fifo/tb/axis_sync_fifo/axis_sync_fifo_tb.py" lineno="80" time="0.002706766128540039" sim_time_ns="170.0" ratio_time="62805.57385713027">
+      <failure error_type="IndexError" error_msg="axis_sync_fifo.r_fifo_data contains no object at index 16" />
+    </testcase>
+  </testsuite>
+</testsuites>

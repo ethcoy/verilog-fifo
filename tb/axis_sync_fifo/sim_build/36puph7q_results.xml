@@ -1,0 +1,6 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="0" />
+    <testcase name="axis_sync_fifo" classname="axis_sync_fifo_tb" file="/home/ecoyle/repos/verilog-fifo/tb/axis_sync_fifo/axis_sync_fifo_tb.py" lineno="101" time="0.00639033317565918" sim_time_ns="1600.0" ratio_time="250378.18154684178" />
+  </testsuite>
+</testsuites>
