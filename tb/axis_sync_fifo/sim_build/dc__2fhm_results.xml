@@ -1,8 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="0" />
-    <testcase name="axis_sync_fifo" classname="axis_sync_fifo_tb" file="/home/ecoyle/repos/verilog-fifo/tb/axis_sync_fifo/axis_sync_fifo_tb.py" lineno="80" time="0.0015404224395751953" sim_time_ns="10.0" ratio_time="6491.7257390496825">
-      <failure error_type="ValueError" error_msg="Can't convert LogicArray to int: it contains non-0/1 values" />
-    </testcase>
-  </testsuite>
-</testsuites>

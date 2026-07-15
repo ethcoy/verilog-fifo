@@ -1,8 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="0" />
-    <testcase name="axis_sync_fifo" classname="axis_sync_fifo_tb" file="/home/ecoyle/repos/verilog-fifo/tb/axis_sync_fifo/axis_sync_fifo_tb.py" lineno="99" time="0.0042612552642822266" sim_time_ns="300.0" ratio_time="70401.79041011582">
-      <failure error_type="AttributeError" error_msg="'Event' object has no attribute 'empty'" />
-    </testcase>
-  </testsuite>
-</testsuites>

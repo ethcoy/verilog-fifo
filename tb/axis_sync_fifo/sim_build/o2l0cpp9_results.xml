@@ -1,0 +1,11 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1783997592" />
+    <testcase name="test_tlast_propagation" classname="axis_sync_fifo_tb" file="/home/ecoyle/repos/verilog-fifo/tb/axis_sync_fifo/axis_sync_fifo_tb.py" lineno="103" time="3.5218329429626465" sim_time_ns="1000000.0" ratio_time="283943.053573341">
+      <failure error_type="ValueError" error_msg="Cannot convert Logic('Z') to int" />
+    </testcase>
+    <testcase name="test_tdata_propagation" classname="axis_sync_fifo_tb" file="/home/ecoyle/repos/verilog-fifo/tb/axis_sync_fifo/axis_sync_fifo_tb.py" lineno="134" time="3.5253183841705322" sim_time_ns="999999.9999999999" ratio_time="283662.32238490105">
+      <failure error_type="AssertionError" error_msg="Sent tlast and received tlast do not match...&#10;assert [2215, 326, 2770, 1985, 2410, 3349, ...] == [1180, 326, 2770, 1985, 2410, 3349, ...]" />
+    </testcase>
+  </testsuite>
+</testsuites>

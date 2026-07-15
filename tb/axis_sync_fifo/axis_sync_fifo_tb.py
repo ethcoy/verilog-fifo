@@ -11,6 +11,8 @@ from cocotb.simtime import get_sim_time
 
 from cocotb_test.simulator import run
 
+import pytest
+
 # need to figure out how to add an indicator to indicate the last data in the queue (two queues, one that fills with data and other that fills with 0 and 1 to indicate not last and last)
 class axis_source:
     def __init__(self, s_clk, s_axis_tdata, s_axis_tvalid, s_axis_tready, s_axis_tlast=None):
@@ -98,6 +100,87 @@ class axis_sink:
             await RisingEdge(self.m_clk)
             self.m_axis_tready.value = 1
 
+# @cocotb.test()
+# async def test_tlast_propagation(dut):
+#     """ Test that the tlast pattern that is sent into the FIFO is replicated on the output """
+
+#     cocotb.start_soon(Clock(dut.i_clk, 10, unit='ns').start())
+
+#     src = axis_source(dut.i_clk, dut.s_axis_tdata, dut.s_axis_tvalid, dut.s_axis_tready, dut.s_axis_tlast)
+#     snk = axis_sink(dut.i_clk, dut.m_axis_tdata, dut.m_axis_tvalid, dut.m_axis_tready, dut.m_axis_tlast)
+
+#     data = []
+#     for i in range(10*int(dut.c_FIFO_DEPTH.value)):
+#         data.append(random.randint(0, 2**int(dut.c_DATA_WIDTH.value) - 1))
+
+#     src.send_nowait(data)
+
+#     tready_pattern = []
+#     for i in range(10*int(dut.c_FIFO_DEPTH.value)):
+#         tready_pattern.append(random.randint(0, 1))
+
+#     for i in range(10*int(dut.c_FIFO_DEPTH.value)):
+#         tready_pattern.append(0)
+
+#     snk.tready_pattern(tready_pattern)
+
+#     await Timer(1000000, unit='ns')
+
+#     src_tlast = [int(i) for i in src.s_axis_tlast_sent]
+#     snk_tlast = [int(i) for i in snk.m_axis_tlast_read]
+
+#     assert src_tlast == snk_tlast, 'Sent tlast and received tlast do not match...'
+
+# @cocotb.test()
+# async def test_tdata_propagation(dut):
+#     """ Test that the tdata pattern that is sent into the FIFO is replicated on the output """
+
+#     cocotb.start_soon(Clock(dut.i_clk, 10, unit='ns').start())
+
+#     src = axis_source(dut.i_clk, dut.s_axis_tdata, dut.s_axis_tvalid, dut.s_axis_tready, dut.s_axis_tlast)
+#     snk = axis_sink(dut.i_clk, dut.m_axis_tdata, dut.m_axis_tvalid, dut.m_axis_tready, dut.m_axis_tlast)
+
+#     data = []
+#     for i in range(10*int(dut.c_FIFO_DEPTH.value)):
+#         data.append(random.randint(0, 2**int(dut.c_DATA_WIDTH.value) - 1))
+
+#     src.send_nowait(data)
+
+#     tready_pattern = []
+#     for i in range(10*int(dut.c_FIFO_DEPTH.value)):
+#         tready_pattern.append(random.randint(0, 1))
+
+#     for i in range(10*int(dut.c_FIFO_DEPTH.value)):
+#         tready_pattern.append(0)
+
+#     snk.tready_pattern(tready_pattern)
+
+#     await Timer(1000000, unit='ns')
+
+#     src_tdata = [int(i) for i in src.s_axis_tdata_sent]
+#     snk_tdata = [int(i) for i in snk.m_axis_tdata_read]
+
+#     assert src_tdata == snk_tdata, 'Sent tlast and received tlast do not match...'
+
+# @pytest.mark.parametrize(
+#     "parameters", [{"c_DATA_WIDTH": "12, 8", 
+#                     "c_FIFO_DEPTH": "512"}]
+# )
+# def test(parameters):
+#     run(
+#         verilog_sources=[
+#             "./../../rtl/axis_sync_fifo.v",
+#         ],
+#         toplevel="axis_sync_fifo",
+#         module="axis_sync_fifo_tb",
+#         # timescale = "1ns/1ps",
+#         parameters=parameters,
+#         extra_env=parameters,
+#         sim_build="sim_build/",
+#         waves = '1'
+#         + "_".join(("{}={}".format(*i) for i in parameters.items())),
+#     )
+
 @cocotb.test()
 async def axis_sync_fifo(dut):
     dut.i_rst.value = 0
@@ -108,40 +191,48 @@ async def axis_sync_fifo(dut):
     await RisingEdge(dut.i_clk)
 
     src = axis_source(dut.i_clk, dut.s_axis_tdata, dut.s_axis_tvalid, dut.s_axis_tready, dut.s_axis_tlast)
+    snk = axis_sink(dut.i_clk, dut.m_axis_tdata, dut.m_axis_tvalid, dut.m_axis_tready, dut.m_axis_tlast)
 
-    # snk = axis_sink(dut.i_clk, dut.m_axis_tdata, dut.m_axis_tvalid, dut.m_axis_tready)
+    # snk.tready_pattern([0]*10)
 
-    l = 20
     data = []
-    for i in range(l):
-        data.append(i)
+    for i in range(10*c_FIFO_DEPTH):
+        data.append(random.randint(0, 2**c_DATA_WIDTH - 1))
+
+    # data = []
+    # for i in range(30):
+    #     data.append(i)
 
     src.send_nowait(data)
 
-    for i in range(30):
-        await RisingEdge(dut.i_clk)
-        for j in range(c_FIFO_DEPTH):
-            print(dut.r_fifo_data[j].value)
-            print(int(dut.r_addr.value))
-        print()
+    # for i in range(30):
+    #     await RisingEdge(dut.i_clk)
+    #     if (dut.s_axis_tvalid.value and dut.s_axis_tready.value):
+    #         for i in range(c_FIFO_DEPTH):
+    #             print(dut.r_fifo_data[i].value)
+    #         print()
 
-    snk = axis_sink(dut.i_clk, dut.m_axis_tdata, dut.m_axis_tvalid, dut.m_axis_tready, dut.m_axis_tlast)
+    # await RisingEdge(dut.i_clk)
+    # for i in range(c_FIFO_DEPTH):
+    #     print(dut.r_fifo_data[i].value)
+    # print()
+
     tready_pattern = []
-    for i in range(1000):
+    for i in range(10*c_FIFO_DEPTH):
         tready_pattern.append(random.randint(0, 1))
     snk.tready_pattern(tready_pattern)
 
+    tready_pattern = []
+    for i in range(10*c_FIFO_DEPTH):
+        tready_pattern.append(0)
+    snk.tready_pattern(tready_pattern)
 
-    for i in range(60):
-        await RisingEdge(dut.i_clk)
-        for j in range(c_FIFO_DEPTH):
-            print(dut.r_fifo_data[j].value)
-            print(int(dut.r_addr.value))
-        print()
+    # for i in range(30):
+    #     await RisingEdge(dut.i_clk)
 
     src.send_nowait(data)
 
-    await Timer(1000, unit='ns')
+    await Timer(10000, unit='ns')
 
     src_tdata = [int(i) for i in src.s_axis_tdata_sent]
     src_tlast = [int(i) for i in src.s_axis_tlast_sent]
@@ -154,6 +245,9 @@ async def axis_sync_fifo(dut):
     print()
     print(snk_tdata)
     print(snk_tlast)
+
+    assert src_tdata == snk_tdata, 'Sent tdata and received tdata do not match...'
+    assert src_tlast == snk_tlast, 'Sent tlast and received tlast do not match...'
 
 
 parameters = {}
