@@ -1,0 +1,53 @@
+[*]
+[*] GTKWave Analyzer v3.3.121 (w)1999-2024 BSI
+[*] Wed Jul 15 01:15:32 2026
+[*]
+[dumpfile] "/home/ecoyle/repos/verilog-fifo/tb/axis_sync_fifo/sim_build/axis_sync_fifo.fst"
+[dumpfile_mtime] "Wed Jul 15 01:10:10 2026"
+[dumpfile_size] 97379
+[savefile] "/home/ecoyle/repos/verilog-fifo/tb/axis_sync_fifo/sim_build/sv.gtkw"
+[timestart] 71800
+[size] 1000 600
+[pos] -1 -1
+*-16.500000 191300 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 254
+[signals_width] 182
+[sst_expanded] 1
+[sst_vpaned_height] 175
+@28
+axis_sync_fifo.i_clk
+axis_sync_fifo.i_rst
+@20000
+-
+@22
+axis_sync_fifo.s_axis_tdata[15:0]
+@28
+axis_sync_fifo.s_axis_tvalid
+axis_sync_fifo.s_axis_tready
+axis_sync_fifo.s_axis_tlast
+@20000
+-
+@22
+axis_sync_fifo.r_wr_addr[9:0]
+axis_sync_fifo.r_wr_addr_next[9:0]
+@28
+axis_sync_fifo.r_write
+@20000
+-
+@22
+axis_sync_fifo.m_axis_tdata[15:0]
+@28
+axis_sync_fifo.m_axis_tvalid
+axis_sync_fifo.m_axis_tready
+axis_sync_fifo.m_axis_tlast
+@20000
+-
+@22
+axis_sync_fifo.r_rd_addr[9:0]
+axis_sync_fifo.r_rd_addr_next[9:0]
+@28
+axis_sync_fifo.r_read
+@29
+axis_sync_fifo.r_read_next
+[pattern_trace] 1
+[pattern_trace] 0

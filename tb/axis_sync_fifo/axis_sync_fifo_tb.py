@@ -106,6 +106,8 @@ class axis_sink:
 
 #     cocotb.start_soon(Clock(dut.i_clk, 10, unit='ns').start())
 
+#     await RisingEdge(dut.i_clk)
+
 #     src = axis_source(dut.i_clk, dut.s_axis_tdata, dut.s_axis_tvalid, dut.s_axis_tready, dut.s_axis_tlast)
 #     snk = axis_sink(dut.i_clk, dut.m_axis_tdata, dut.m_axis_tvalid, dut.m_axis_tready, dut.m_axis_tlast)
 
@@ -137,6 +139,8 @@ class axis_sink:
 
 #     cocotb.start_soon(Clock(dut.i_clk, 10, unit='ns').start())
 
+#     await RisingEdge(dut.i_clk)
+
 #     src = axis_source(dut.i_clk, dut.s_axis_tdata, dut.s_axis_tvalid, dut.s_axis_tready, dut.s_axis_tlast)
 #     snk = axis_sink(dut.i_clk, dut.m_axis_tdata, dut.m_axis_tvalid, dut.m_axis_tready, dut.m_axis_tlast)
 
@@ -164,7 +168,7 @@ class axis_sink:
 
 # @pytest.mark.parametrize(
 #     "parameters", [{"c_DATA_WIDTH": "12, 8", 
-#                     "c_FIFO_DEPTH": "512"}]
+#                     "c_FIFO_DEPTH": "128"}]
 # )
 # def test(parameters):
 #     run(
@@ -178,6 +182,7 @@ class axis_sink:
 #         extra_env=parameters,
 #         sim_build="sim_build/",
 #         waves = '1'
+#         # seed = '0'
 #         + "_".join(("{}={}".format(*i) for i in parameters.items())),
 #     )
 
@@ -232,7 +237,7 @@ async def axis_sync_fifo(dut):
 
     src.send_nowait(data)
 
-    await Timer(10000, unit='ns')
+    await Timer(1000000, unit='ns')
 
     src_tdata = [int(i) for i in src.s_axis_tdata_sent]
     src_tlast = [int(i) for i in src.s_axis_tlast_sent]
@@ -251,8 +256,8 @@ async def axis_sync_fifo(dut):
 
 
 parameters = {}
-parameters['c_DATA_WIDTH'] = 8
-parameters['c_FIFO_DEPTH'] = 16
+parameters['c_DATA_WIDTH'] = 16
+parameters['c_FIFO_DEPTH'] = 512
 
 c_DATA_WIDTH = parameters['c_DATA_WIDTH']
 c_FIFO_DEPTH = parameters['c_FIFO_DEPTH']

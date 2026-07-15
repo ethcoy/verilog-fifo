@@ -1,0 +1,7 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1784078173" />
+    <testcase name="test_tlast_propagation" classname="axis_sync_fifo_tb" file="/home/ecoyle/repos/verilog-fifo/tb/axis_sync_fifo/axis_sync_fifo_tb.py" lineno="103" time="2.767831802368164" sim_time_ns="1000000.0" ratio_time="361293.630322622" />
+    <testcase name="test_tdata_propagation" classname="axis_sync_fifo_tb" file="/home/ecoyle/repos/verilog-fifo/tb/axis_sync_fifo/axis_sync_fifo_tb.py" lineno="136" time="2.7806081771850586" sim_time_ns="999999.9999999999" ratio_time="359633.5536250732" />
+  </testsuite>
+</testsuites>
