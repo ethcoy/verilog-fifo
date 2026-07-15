@@ -90,6 +90,10 @@ always @(posedge i_clk) begin
         m_axis_tlast_reg <= r_fifo_data[r_rd_addr_next[c_ADDR_WIDTH - 2:0]][c_DATA_WIDTH_LST - 1];
     end
 
+    if (i_rst) begin
+        r_wr_addr <= {c_ADDR_WIDTH{1'b0}};
+        r_rd_addr <= {c_ADDR_WIDTH{1'b0}};
+    end
 end
 
 endmodule
