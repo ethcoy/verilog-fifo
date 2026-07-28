@@ -127,7 +127,7 @@ class axis_sink:
 
 # @cocotb.test()
 # async def test_tlast_propagation(dut):
-#     """ Test that the tlast pattern that is sent into the FIFO is replicated on the output """
+#     """ Test tha the tlast pattern that is sent into the FIFO is replicated on the output """
 
 #     cocotb.start_soon(Clock(dut.i_clk, 10, unit='ns').start())
 
