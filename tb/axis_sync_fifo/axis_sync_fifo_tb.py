@@ -13,7 +13,6 @@ from cocotb_test.simulator import run
 
 import pytest
 
-# need to figure out how to add an indicator to indicate the last data in the queue (two queues, one that fills with data and other that fills with 0 and 1 to indicate not last and last)
 class axis_source:
     def __init__(self, s_clk, s_axis_tdata, s_axis_tvalid, s_axis_tready, s_axis_tlast=None):
         self.s_clk = s_clk
@@ -167,7 +166,7 @@ class axis_sink:
 #     assert src_tdata == snk_tdata, 'Sent tlast and received tlast do not match...'
 
 # @pytest.mark.parametrize(
-#     "parameters", [{"c_DATA_WIDTH": "12, 8", 
+#     "parameters", [{"c_DATA_WIDTH": "12, 8",
 #                     "c_FIFO_DEPTH": "128"}]
 # )
 # def test(parameters):
@@ -236,6 +235,10 @@ async def axis_sync_fifo(dut):
     #     await RisingEdge(dut.i_clk)
 
     src.send_nowait(data)
+    src.send_nowait(data[1:5])
+    src.send_nowait(data[4:26])
+    src.send_nowait(data[25:102])
+    src.send_nowait(data[5:99])
 
     await Timer(1000000, unit='ns')
 
