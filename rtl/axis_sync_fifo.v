@@ -1,5 +1,3 @@
-`timescale 1ns/1ps
-
 module axis_sync_fifo #(
     parameter c_DATA_WIDTH = 16,
     parameter c_FIFO_DEPTH = 10000

@@ -13,7 +13,6 @@ from cocotb_test.simulator import run
 
 import pytest
 
-# need to figure out how to add an indicator to indicate the last data in the queue (two queues, one that fills with data and other that fills with 0 and 1 to indicate not last and last)
 class axis_source:
     def __init__(self, s_clk, s_axis_tdata, s_axis_tvalid, s_axis_tready, s_axis_tlast=None):
         self.s_clk = s_clk
@@ -100,103 +99,19 @@ class axis_sink:
             await RisingEdge(self.m_clk)
             self.m_axis_tready.value = 1
 
-# @cocotb.test()
-# async def test_tlast_propagation(dut):
-#     """ Test that the tlast pattern that is sent into the FIFO is replicated on the output """
-
-#     cocotb.start_soon(Clock(dut.i_clk, 10, unit='ns').start())
-
-#     await RisingEdge(dut.i_clk)
-
-#     src = axis_source(dut.i_clk, dut.s_axis_tdata, dut.s_axis_tvalid, dut.s_axis_tready, dut.s_axis_tlast)
-#     snk = axis_sink(dut.i_clk, dut.m_axis_tdata, dut.m_axis_tvalid, dut.m_axis_tready, dut.m_axis_tlast)
-
-#     data = []
-#     for i in range(10*int(dut.c_FIFO_DEPTH.value)):
-#         data.append(random.randint(0, 2**int(dut.c_DATA_WIDTH.value) - 1))
-
-#     src.send_nowait(data)
-
-#     tready_pattern = []
-#     for i in range(10*int(dut.c_FIFO_DEPTH.value)):
-#         tready_pattern.append(random.randint(0, 1))
-
-#     for i in range(10*int(dut.c_FIFO_DEPTH.value)):
-#         tready_pattern.append(0)
-
-#     snk.tready_pattern(tready_pattern)
-
-#     await Timer(1000000, unit='ns')
-
-#     src_tlast = [int(i) for i in src.s_axis_tlast_sent]
-#     snk_tlast = [int(i) for i in snk.m_axis_tlast_read]
-
-#     assert src_tlast == snk_tlast, 'Sent tlast and received tlast do not match...'
-
-# @cocotb.test()
-# async def test_tdata_propagation(dut):
-#     """ Test that the tdata pattern that is sent into the FIFO is replicated on the output """
-
-#     cocotb.start_soon(Clock(dut.i_clk, 10, unit='ns').start())
-
-#     await RisingEdge(dut.i_clk)
-
-#     src = axis_source(dut.i_clk, dut.s_axis_tdata, dut.s_axis_tvalid, dut.s_axis_tready, dut.s_axis_tlast)
-#     snk = axis_sink(dut.i_clk, dut.m_axis_tdata, dut.m_axis_tvalid, dut.m_axis_tready, dut.m_axis_tlast)
-
-#     data = []
-#     for i in range(10*int(dut.c_FIFO_DEPTH.value)):
-#         data.append(random.randint(0, 2**int(dut.c_DATA_WIDTH.value) - 1))
-
-#     src.send_nowait(data)
-
-#     tready_pattern = []
-#     for i in range(10*int(dut.c_FIFO_DEPTH.value)):
-#         tready_pattern.append(random.randint(0, 1))
-
-#     for i in range(10*int(dut.c_FIFO_DEPTH.value)):
-#         tready_pattern.append(0)
-
-#     snk.tready_pattern(tready_pattern)
-
-#     await Timer(1000000, unit='ns')
-
-#     src_tdata = [int(i) for i in src.s_axis_tdata_sent]
-#     snk_tdata = [int(i) for i in snk.m_axis_tdata_read]
-
-#     assert src_tdata == snk_tdata, 'Sent tlast and received tlast do not match...'
-
-# @pytest.mark.parametrize(
-#     "parameters", [{"c_DATA_WIDTH": "12, 8", 
-#                     "c_FIFO_DEPTH": "128"}]
-# )
-# def test(parameters):
-#     run(
-#         verilog_sources=[
-#             "./../../rtl/axis_sync_fifo.v",
-#         ],
-#         toplevel="axis_sync_fifo",
-#         module="axis_sync_fifo_tb",
-#         # timescale = "1ns/1ps",
-#         parameters=parameters,
-#         extra_env=parameters,
-#         sim_build="sim_build/",
-#         waves = '1'
-#         # seed = '0'
-#         + "_".join(("{}={}".format(*i) for i in parameters.items())),
-#     )
-
 @cocotb.test()
-async def axis_sync_fifo(dut):
-    dut.i_rst.value = 0
-    dut.i_clk.value = 0
+async def axis_async_fifo(dut):
+    dut.s_clk.value = 0
+    dut.m_clk.value = 0
 
-    cocotb.start_soon(Clock(dut.i_clk, 10, unit="ns").start())
+    cocotb.start_soon(Clock(dut.s_clk, 10, unit="ns").start())
+    cocotb.start_soon(Clock(dut.m_clk, 53, unit="ns").start())
 
-    await RisingEdge(dut.i_clk)
+    await RisingEdge(dut.s_clk)
+    await RisingEdge(dut.m_clk)
 
-    src = axis_source(dut.i_clk, dut.s_axis_tdata, dut.s_axis_tvalid, dut.s_axis_tready, dut.s_axis_tlast)
-    snk = axis_sink(dut.i_clk, dut.m_axis_tdata, dut.m_axis_tvalid, dut.m_axis_tready, dut.m_axis_tlast)
+    src = axis_source(dut.s_clk, dut.s_axis_tdata, dut.s_axis_tvalid, dut.s_axis_tready, dut.s_axis_tlast)
+    snk = axis_sink(dut.m_clk, dut.m_axis_tdata, dut.m_axis_tvalid, dut.m_axis_tready, dut.m_axis_tlast)
 
     data = []
     for i in range(10*c_FIFO_DEPTH):
@@ -243,10 +158,10 @@ c_FIFO_DEPTH = parameters['c_FIFO_DEPTH']
 
 if __name__ == "__main__":
     run(verilog_sources = [
-            './../../rtl/axis_sync_fifo.v',
+            './../../rtl/axis_async_fifo.v',
         ],
-        toplevel = "axis_sync_fifo",
-        module = "axis_sync_fifo_tb",
+        toplevel = "axis_async_fifo",
+        module = "axis_async_fifo_tb",
         parameters = parameters,
         sim_build = "sim_build/",
         timescale = "1ns/1ps",
