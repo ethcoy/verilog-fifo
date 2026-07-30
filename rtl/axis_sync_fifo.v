@@ -99,7 +99,6 @@ always @(*) begin
         r_rd_addr_next = r_rd_addr;
         m_axis_tvalid_reg = 1'b0;
     end
-
 end
 
 always @(posedge i_clk) begin

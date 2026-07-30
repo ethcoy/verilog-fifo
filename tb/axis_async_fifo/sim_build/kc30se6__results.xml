@@ -1,8 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="0" />
-    <testcase name="axis_async_fifo" classname="axis_async_fifo_tb" file="/home/ecoyle/repos/personal/verilog-fifo/tb/axis_async_fifo/axis_async_fifo_tb.py" lineno="102" time="0.0059664249420166016" sim_time_ns="1000.0" ratio_time="167604.55544455544">
-      <failure error_type="AssertionError" error_msg="Sent tdata and received tdata do not match...&#10;assert [0, 1, 2, 3, 4, 5, ...] == [0, 1, 2, 3, 4, 5, ...]" />
-    </testcase>
-  </testsuite>
-</testsuites>
