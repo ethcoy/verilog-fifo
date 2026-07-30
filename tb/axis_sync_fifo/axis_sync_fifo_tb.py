@@ -1,3 +1,29 @@
+"""
+
+MIT License
+
+Copyright (c) 2026 Ethan Coyle
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+"""
+
 import cocotb
 
 import os
@@ -13,7 +39,6 @@ from cocotb_test.simulator import run
 
 import pytest
 
-# need to figure out how to add an indicator to indicate the last data in the queue (two queues, one that fills with data and other that fills with 0 and 1 to indicate not last and last)
 class axis_source:
     def __init__(self, s_clk, s_axis_tdata, s_axis_tvalid, s_axis_tready, s_axis_tlast=None):
         self.s_clk = s_clk
@@ -102,7 +127,7 @@ class axis_sink:
 
 # @cocotb.test()
 # async def test_tlast_propagation(dut):
-#     """ Test that the tlast pattern that is sent into the FIFO is replicated on the output """
+#     """ Test tha the tlast pattern that is sent into the FIFO is replicated on the output """
 
 #     cocotb.start_soon(Clock(dut.i_clk, 10, unit='ns').start())
 
@@ -167,7 +192,7 @@ class axis_sink:
 #     assert src_tdata == snk_tdata, 'Sent tlast and received tlast do not match...'
 
 # @pytest.mark.parametrize(
-#     "parameters", [{"c_DATA_WIDTH": "12, 8", 
+#     "parameters", [{"c_DATA_WIDTH": "12, 8",
 #                     "c_FIFO_DEPTH": "128"}]
 # )
 # def test(parameters):
@@ -215,6 +240,10 @@ async def axis_sync_fifo(dut):
     snk.tready_pattern(tready_pattern)
 
     src.send_nowait(data)
+    src.send_nowait(data[1:5])
+    src.send_nowait(data[4:26])
+    src.send_nowait(data[25:102])
+    src.send_nowait(data[5:99])
 
     await Timer(1000000, unit='ns')
 
