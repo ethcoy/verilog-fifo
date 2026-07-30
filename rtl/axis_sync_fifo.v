@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 /*
 
 MIT License
@@ -26,9 +24,6 @@ SOFTWARE.
 
 */
 
-`timescale 1ns/1ps
-
->>>>>>> 392383923dea3e787d65a8fae258db285216e0b0
 module axis_sync_fifo #(
     parameter c_DATA_WIDTH = 16,
     parameter c_FIFO_DEPTH = 10000
@@ -80,11 +75,10 @@ always @(*) begin
     r_wr_addr_next = r_wr_addr;
     r_rd_addr_next = r_rd_addr;
     r_write = 1'b0;
-    r_read_next = 1'b0;
-    if (r_wr_addr[c_ADDR_WIDTH - 1] != r_rd_addr[c_ADDR_WIDTH - 1]) begin
-        if (r_wr_addr[c_ADDR_WIDTH - 2:0] == r_rd_addr[c_ADDR_WIDTH - 2:0]) begin
-            s_axis_tready_reg = 1'b0;
-        end
+    r_read_next = 1'b1;
+
+    if (r_wr_addr[c_ADDR_WIDTH - 1] != r_rd_addr[c_ADDR_WIDTH - 1] && r_wr_addr[c_ADDR_WIDTH - 2:0] == r_rd_addr[c_ADDR_WIDTH - 2:0]) begin
+        s_axis_tready_reg = 1'b0;
     end
 
     if (s_axis_tvalid && s_axis_tready) begin
@@ -92,15 +86,18 @@ always @(*) begin
         r_wr_addr_next = r_wr_addr + 1'b1;
     end
 
-    if (r_wr_addr != r_rd_addr_next) begin
-        r_read_next = 1'b1;
-        if (r_read) begin
-            m_axis_tvalid_reg = 1'b1;
-        end
+    if (r_read) begin
+        m_axis_tvalid_reg = 1'b1;
     end
 
     if (m_axis_tvalid && m_axis_tready) begin
         r_rd_addr_next = r_rd_addr + 1'b1;
+    end
+
+    if (r_rd_addr == r_wr_addr) begin
+        r_read_next = 1'b0;
+        r_rd_addr_next = r_rd_addr;
+        m_axis_tvalid_reg = 1'b0;
     end
 
 end
