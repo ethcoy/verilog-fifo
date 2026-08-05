@@ -26,7 +26,7 @@ SOFTWARE.
 
 module axis_sync_fifo #(
     parameter c_DATA_WIDTH = 16,
-    parameter c_FIFO_DEPTH = 10000
+    parameter c_FIFO_DEPTH = 256
 ) (
     input wire i_clk,
     input wire i_rst,

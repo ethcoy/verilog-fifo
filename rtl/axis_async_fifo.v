@@ -26,7 +26,7 @@ SOFTWARE.
 
 module axis_async_fifo #(
     parameter c_DATA_WIDTH = 16,
-    parameter c_FIFO_DEPTH = 10000
+    parameter c_FIFO_DEPTH = 256
 ) (
     input wire s_clk,
     input wire m_clk,
@@ -93,10 +93,8 @@ always @(*) begin
     r_write = 1'b0;
     r_read_next = 1'b1;
 
-    if (r_s_wr_gray[c_ADDR_WIDTH - 1:c_ADDR_WIDTH - 2] == ~r_s_rd_gray[c_ADDR_WIDTH - 1:c_ADDR_WIDTH - 2]) begin
-        if (r_s_wr_gray[c_ADDR_WIDTH - 3:0] == r_s_rd_gray[c_ADDR_WIDTH - 3:0]) begin
-            s_axis_tready_reg = 1'b0;
-        end
+    if (r_s_wr_gray[c_ADDR_WIDTH - 1:c_ADDR_WIDTH - 2] == ~r_s_rd_gray[c_ADDR_WIDTH - 1:c_ADDR_WIDTH - 2] && r_s_wr_gray[c_ADDR_WIDTH - 3:0] == r_s_rd_gray[c_ADDR_WIDTH - 3:0]) begin
+        s_axis_tready_reg = 1'b0;
     end
 
     if (s_axis_tvalid && s_axis_tready) begin
